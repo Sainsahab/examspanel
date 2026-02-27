@@ -1,0 +1,56 @@
+{% extends "Sidebar.html" %}
+{% block content %}
+<main class="card page page-tasks">
+  <div class="card-body">
+    <h2>Create Exam</h2>
+
+    <form method="post" action="{{ url_for('create_exam') }}" class="modal-grid">
+
+      <div class="form-field" style="grid-column:1 / -1;">
+        <label>Title</label>
+        <input type="text" name="title" placeholder="Exam title..." required>
+      </div>
+
+      <div class="form-field" style="grid-column:1 / -1;">
+        <label>Description</label>
+        <textarea name="description" placeholder="Description..." required></textarea>
+      </div>
+
+      <div class="form-field">
+        <label>Subject</label>
+        <input type="text" name="subject" placeholder="Subject Name">
+      </div>
+
+      <div class="form-field">
+        <label>Due Date</label>
+        <input type="date" name="due">
+      </div>
+
+      <div class="form-field">
+        <label>Reminder</label>
+        <div class="radio-group">
+          <label><input type="radio" name="reminder" value="yes"> Yes</label>
+          <label><input type="radio" name="reminder" value="no" checked> No</label>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Priority</label>
+        <select name="priority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+
+      
+
+      <div style="display:flex;gap:12px;margin-top:12px;">
+        <a class="btn-cancel" href="{{ url_for('exams') }}">Cancel</a>
+        <button class="btn-create" type="submit">Create</button>
+      </div>
+
+    </form>
+  </div>
+</main>
+{% endblock %}

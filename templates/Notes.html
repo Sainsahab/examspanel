@@ -1,0 +1,136 @@
+{% extends "Sidebar.html" %}
+{% block content %}
+<section class="rem-main">
+  <h1 class="page-title">👋 Hi {{ session.user.name if session.user else 'Student' }}</h1>
+<main class="card page page-tasks" aria-labelledby="pageTitle">
+
+  <div class="tasks-header">
+    <div>
+      <h1 id="pageTitle" class="page-title">My Notes</h1>
+      <div class="muted">Organize and track your assignments and exam prep</div>
+    </div>
+
+    <div class="tasks-actions">
+      <a class="btn" href="{{ url_for('new_task') }}">Add Notes</a>
+    </div>
+  </div>
+
+ 
+  <form method="get" action="{{ url_for('notes') }}" class="tasks-controls" role="region" aria-label="Task controls">
+    <div class="search">
+      <label class="sr-only" for="taskSearch">Search Notes</label>
+      <input id="taskSearch" name="search" type="search"
+             placeholder="Search notes..."
+             value="{{ search | default('') }}">
+    </div>
+
+    <div class="filter">
+      <label class="sr-only" for="subjectFilter">Filter by subject</label>
+      <select id="subjectFilter" name="subject" aria-label="Filter by subject">
+        <option value="">All Subject</option>
+        {% for s in subjects %}
+          <option value="{{ s }}" {% if subject_selected == s %}selected{% endif %}>
+            {{ s }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button class="btn" type="submit">Apply</button>
+  </form>
+
+  
+  <div class="tasks-tabs" role="tablist">
+    <div class="tab">Notes</div>
+  </div>
+
+  <div class="tasks-list" id="tasksList">
+
+    {% if notes %}
+      {% for n in notes %}
+        <article class="task-card" data-id="{{ n.note_id }}" data-subject="{{ n.subject }}">
+
+          <div class="task-left">
+            <div class="task-title-row">
+              <div class="task-title">{{ n.title }}</div>
+
+              
+              <span class="chip" data-subject="{{ n.subject }}">{{ n.subject }}</span>
+            </div>
+
+            <div style="display:flex;gap:10px;align-items:center;margin-top:6px;">
+    
+   
+    <div class="task-desc muted" style="flex:1;min-width:0;">
+        {{ n.description | e }}
+    </div>
+
+    
+    <div style="white-space:nowrap;
+                display:flex;
+                flex-direction:row;
+                align-items:flex-end;
+                gap:14px;">
+
+        {% if n.reminder %}
+            <span class="reminder-icon" title="Reminder set">🔔</span>
+        {% endif %}
+
+        <span class="
+            {% if n.priority == 'high' %}tag-danger
+            {% elif n.priority == 'low' %}tag-muted
+            {% else %}tag
+            {% endif %}
+        ">
+            {{ n.priority or 'medium' }}
+        </span>
+    </div>
+
+</div>
+
+<div class="task-meta muted">{{ n.due_text | default('', true) }}</div>
+
+          </div>
+        
+          <div class="task-right">
+            
+            <form method="post" action="{{ url_for('delete_task') }}" style="display:inline;">
+              <input type="hidden" name="note_id" value="{{ n.note_id }}">
+              <button class="btn-delete" type="submit" onclick="return confirm('Delete this note?')">🗑️</button>
+            </form>
+          </div>
+
+        </article>
+      {% endfor %}
+    {% else %}
+      <div class="muted">You have no notes yet. Click <strong>Add Notes</strong> to create one.</div>
+    {% endif %}
+  </div>
+</main>
+</section>
+
+<script>
+(function() {
+  function hashString(str) {
+    let h = 2166136261 >>> 0;
+    for (let c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0;
+    return h;
+  }
+  function getColorForSubject(s) {
+    if (!s) return { bg:"#eee", text:"#333" };
+    const h = hashString(s) % 360;
+    return {
+      bg:`hsl(${h},70%,92%)`,
+      text:`hsl(${h},40%,25%)`
+    };
+  }
+  document.querySelectorAll(".chip[data-subject]").forEach(c=>{
+    const s = c.dataset.subject;
+    const col = getColorForSubject(s);
+    c.style.background=col.bg;
+    c.style.color=col.text;
+  });
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+Database Name-: exampanel
+
+CREATE TABLE loginregister (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    name TEXT NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    contact VARCHAR(20) DEFAULT NULL,
+    password VARCHAR(50) NOT NULL,
+    image VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE notes (
+    note_id INT(11) NOT NULL AUTO_INCREMENT,
+    id INT(11) DEFAULT NULL,
+    title VARCHAR(255) DEFAULT NULL,
+    subject VARCHAR(100) DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    due_text VARCHAR(255) DEFAULT NULL,
+    reminder TINYINT(1) DEFAULT 0,
+    priority VARCHAR(10) DEFAULT 'medium',
+    PRIMARY KEY (note_id)
+);
+
+CREATE TABLE exams (
+    exam_id INT(11) NOT NULL AUTO_INCREMENT,
+    id INT(11) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    subject VARCHAR(100) DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    due_text VARCHAR(255) DEFAULT NULL,
+    reminder TINYINT(1) DEFAULT 0,
+    priority VARCHAR(10) DEFAULT 'medium',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (exam_id)
+);
+
+CREATE TABLE reminders (
+    reminder_id INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    source_table ENUM('notes','exams') NOT NULL,
+    source_id INT(11) NOT NULL,
+    reminder_date DATE NOT NULL,
+    dismissed TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (reminder_id),
+    KEY (user_id)
+);

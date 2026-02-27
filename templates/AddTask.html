@@ -1,0 +1,35 @@
+{% extends "Sidebar.html" %}
+{% block content %}
+
+<main class="card page page-tasks">
+  <div class="card-body">
+    <h2>Create Notes</h2>
+
+    <form method="post" action="{{ url_for('create_task') }}" class="modal-grid">
+
+      <div class="form-field">
+        <label>Subject</label>
+        <input type="text" name="subject" placeholder="Subject Name">
+      </div>
+
+      
+      <div class="form-field" style="grid-column:1 / -1;">
+        <label>Title</label>
+        <input type="text" name="title" placeholder="Note title..." required>
+      </div>
+
+      <div class="form-field" style="grid-column:1 / -1;">
+        <label>Description</label>
+        <textarea name="description" class="text-box" placeholder="Description..." required></textarea>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px;">
+        <a class="btn-cancel" href="{{ url_for('notes') }}">Cancel</a>
+        <button class="btn-create" type="submit">Create</button>
+      </div>
+
+    </form>
+  </div>
+</main>
+
+{% endblock %}

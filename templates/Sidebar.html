@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exam Planner</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="page page-reminders">
+      <div class="rem-layout">
+        <aside class="rem-sidebar">
+          <h5>Exam Planner</h5>
+          <nav class="menu" aria-label="Sidebar Menu">
+            <a
+              href="{{ url_for('dashboard') }}"
+              class="{% if request.path.startswith(url_for('dashboard')) %}active{% endif %}"
+            >
+              <span>🏠</span> Dashboard
+            </a>
+
+            <a
+              href="{{ url_for('exams') }}"
+              class="{% if request.path.startswith(url_for('exams')) %}active{% endif %}"
+            >
+              <span>📅</span> Exams
+            </a>
+
+            <a
+              href="{{ url_for('notes') }}"
+              class="{% if request.path.startswith(url_for('notes')) %}active{% endif %}"
+            >
+              <span>🧑</span> Notes Sessions
+            </a>
+
+            <a
+              href="{{ url_for('reminders') }}"
+              class="{% if request.path.startswith(url_for('reminders')) %}active{% endif %}"
+            >
+              <span>🔔</span> Reminders
+            </a>
+
+            <a
+              href="{{ url_for('profile') }}"
+              class="{% if request.path.startswith(url_for('profile')) %}active{% endif %}"
+            >
+              <span>⚙️</span> Profile
+            </a>
+
+            <a href="{{ url_for('logout') }}"> <span>🔓</span> Logout </a>
+          </nav>
+        </aside>
+
+        <main class="main-content" role="main">
+          {% block content %}{% endblock %}
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

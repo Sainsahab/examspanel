@@ -1,0 +1,46 @@
+{% extends "Sidebar.html" %}
+{% block content %}
+<section class="rem-main">
+  <h1 class="page-title">👋 Hi {{ session.user.name if session.user else 'Student' }}</h1>
+  <div class="rem-main-layout">
+    <header class="rem-header">
+      <div>
+        <div class="title" id="remindersTitle">Reminders &amp; Notifications</div>
+      </div>
+    </header>
+
+    <div class="rem-card" role="region">
+      <div class="rem-list" role="list">
+        {% if reminders %}
+          {% for r in reminders %}
+            <div class="rem-row" role="listitem">
+              <div class="rem-left">
+                <div class="rem-icon" aria-hidden="true">🔔</div>
+                <div class="rem-text">
+                  <div class="rem-title">{{ r.title }}</div>
+                  <div class="rem-sub">
+                    {% if r.days_left is not none %}
+                      {{ r.days_left }} day{{ '' if r.days_left == 1 else 's' }} remaining (Due: {{ r.due_text }})
+                    {% else %}
+                      Due: {{ r.due_text }}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="rem-right">
+                <form method="post" action="{{ url_for('reminders_delete') }}" style="display:inline;">
+                  <input type="hidden" name="reminder_id" value="{{ r.reminder_id }}">
+                  <button type="submit" class="btn btn-ghost" title="Dismiss reminder">🗑️</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="muted" style="padding:16px;">No reminders for today.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

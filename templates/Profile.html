@@ -1,0 +1,112 @@
+{% extends "Sidebar.html" %}
+ {% block content %}
+ <section class="rem-main">
+  <h1 class="page-title">👋 Hi {{ user.name }}</h1>
+
+  <div class="rem-main-layout">
+    <div class="profile-wrap">
+
+      
+      {% if message %}
+        {% set cat, text = message %}
+        <div class="message {{ cat }}">{{ text }}</div>
+      {% endif %}
+
+      
+      <section class="card">
+        <h2 class="card-title">Profile Picture</h2>
+        <div class="card-body avatar-row">
+          <div class="avatar-preview">
+            <img
+              id="avatarImg"
+              src="{{ url_for('static', filename='uploads/' ~ (user.image or 'default.jpg')) }}"
+              alt="Profile avatar"
+            />
+          </div>
+
+          <div class="avatar-actions">
+            <form action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="user_id" value="{{ user.id }}">
+              <label class="btn btn-outline file-label" for="avatarInput">Upload Image</label>
+              <input
+                id="avatarInput"
+                name="avatarInput"
+                type="file"
+                accept="image/*"
+                class="sr-only"
+                onchange="this.form.submit()"
+              />
+              
+            </form>
+          </div>
+        </div>
+      </section>
+
+
+<section class="card">   
+  <form action="{{url_for('update_profile')}}" method="POST">
+    <div class="card-body">
+      <h2 class="sub-title">Personal Information</h2>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="fullName">Full name</label>
+          <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            value="{{user.name}}"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value="{{user.email}}"
+            required
+          />
+        </div>
+
+        <div class="form-field full-width">
+          <label for="contact">Contact Number</label>
+          <input
+            id="contact"
+            name="contact"
+            type="text"
+            value="{{user.contact}}"
+          />
+        </div>
+      </div>
+    </div>
+
+   
+    <div class="card-body">
+      <h2 class="sub-title">Update Password</h2>
+
+      <div class="form-field">
+        <label for="newPassword">New Password</label>
+        <div class="actions-row">
+          <input
+            id="newPassword"
+            name="newPassword"
+            type="password"
+          />
+          <button class="btn btn-primary" type="submit">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  {% endblock %}

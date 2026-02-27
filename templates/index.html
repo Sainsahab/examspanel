@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ExamPlanner</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f8f9fa;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    /* NAVBAR */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 15px;
+    }
+
+    header ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    header a {
+      text-decoration: none;
+      color: #0d6efd;
+      font-weight: 500;
+    }
+
+    /* HERO */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      padding: 40px 0;
+      flex-wrap: wrap;
+    }
+
+    .hero-text {
+      flex: 1;
+    }
+
+    .hero-img {
+      flex: 1;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    .lead {
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    /* BUTTONS */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      margin-right: 10px;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: #0d6efd;
+      color: white;
+    }
+
+    .btn-outline {
+      border: 1px solid #ccc;
+      color: #333;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 24px;
+    }
+
+    /* CARDS */
+    .grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      flex: 1;
+      min-width: 250px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+    /* FEATURES */
+    .features {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .feature-box {
+      flex: 1;
+      min-width: 250px;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .dark {
+      background: #212529;
+      color: white;
+    }
+
+    .light {
+      background: #fff;
+      border: 1px solid #ddd;
+    }
+
+    /* CTA */
+    .cta {
+      text-align: center;
+      margin: 50px 0;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- NAVBAR -->
+    <header>
+      <h3 class="fs-4">ExamPlanner</h3>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+      </ul>
+    </header>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Stay Organized And Ace Your Exams</h1>
+        <p class="lead">
+         ExamPlanner helps students manage exams, notes, and reminders in one place.
+          Create tasks, track deadlines, and sync your schedule with Google Calendar. all from a simple dashboard.
+        </p>
+
+        <a href="{{ url_for('login_page') }}" class="btn btn-primary">Login</a>
+        <a href="{{ url_for('loginregister') }}" class="btn btn-outline">Signup</a>
+      </div>
+
+      <img src="{{ url_for('static', filename='uploads/still-life-colorful-overloaded-bullet-journal.jpg') }}"
+           class="hero-img">
+    </div>
+
+    <!-- ABOUT -->
+    <h2 id="about" class="section-title">About ExamPlanner</h2>
+
+    <div class="grid">
+      <div class="card">
+        <img src="{{ url_for('static', filename='uploads/online-survey-3d-render-laptop-form-with-ticks.jpg') }}">
+        <div class="card-body">
+          Create and manage your exams. Add subjects, set deadlines,
+              and never miss an important test again
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="{{ url_for('static', filename='uploads/still-life-colorful-overloaded-bullet-journal (1).jpg') }}">
+        <div class="card-body">
+         Organize your notes in one place. Keep everything structured,
+              simple, and easy to access anytime.
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="{{ url_for('static', filename='uploads/planner-calendar-schedule-date-concept.jpg') }}">
+        <div class="card-body">
+          Set smart reminders and sync with Google Calendar.
+              Stay prepared for every exam and task.
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <h2 id="features" class="section-title">How It Works</h2>
+
+    <div class="features">
+      <div class="feature-box dark">
+        <h4>Create & Manage Tasks</h4>
+        <p>Easily create exams and notes. Update or delete tasks anytime from your dashboard.</p>
+      </div>
+
+      <div class="feature-box light">
+        <h4>Track & Get Reminders</h4>
+        <p>Get reminders for upcoming exams and stay ahead with Google Calendar integration.</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+      <h2>Start Planning Today 🚀</h2>
+      <p>Take control of your studies. Stay organized and achieve more.</p>
+      
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>&copy; 2026 ExamPlanner</p>
+      🌐 📸 👍
+    </footer>
+  </div>
+
+</body>
+</html>

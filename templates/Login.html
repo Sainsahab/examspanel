@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Login Form</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script
+      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.7.1/dist/dotlottie-wc.js"
+      type="module"
+    ></script>
+  </head>
+  <body>
+    <div class="loginbg">
+      <div class="animation">
+        <dotlottie-wc
+          src="{{ url_for('static', filename='uploads/cc.json') }}"
+          speed="1"
+          mode="forward"
+          loop
+          autoplay
+        ></dotlottie-wc>
+      </div>
+      <div class="login-container">
+        <div class="login-card">
+          <div class="login-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to your account</p>
+          </div>
+          {% if message %} {% set cat, text = message %}
+          <div class="message {{ cat }}">{{ text }}</div>
+          {% endif %}
+          <form
+            class="login-form"
+            action="{{ url_for('login') }}"
+            method="POST"
+          >
+            <div class="form-group">
+              <div class="input-wrapper">
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  placeholder="Email"
+                />
+
+                <span class="focus-border"></span>
+              </div>
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <div class="input-wrapper password-wrapper">
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  autocomplete="current-password"
+                  placeholder="Password"
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="login-btn btn">
+              <span class="btn-text">Sign In</span>
+            </button>
+          </form>
+          <p class="">
+            Don't have an account?
+            <a href="{{ url_for('loginregister') }}" class="">Register</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
