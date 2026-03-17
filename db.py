@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+#===== Database Connection =====
 
 def get_connection():
     return mysql.connector.connect(

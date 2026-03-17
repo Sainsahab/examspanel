@@ -80,6 +80,10 @@ def attach_and_filter_rows(rows, due_field="due_text"):
 
     return filtered_rows
 
+# ===== Login & Register Screen (LoginRegister.html + Login.html) =====
+
+
+# ===== Register Screen (LoginRegister.html) =====
 
 @app.route("/")
 def index():
@@ -112,6 +116,7 @@ def register():
     flash("Registration successful! You can now login.", "success")
     return redirect("/")
 
+# ===== Login(Login.html) =====
 
 @app.route("/login_page", methods=["GET"])
 def login_page():
@@ -142,6 +147,7 @@ def login():
 
     return render_template("Login.html", message=("error", "Invalid email or password."))
 
+# ===== Profile Screen (Profile.html) =====
 
 @app.route("/profile", methods=["GET"])
 def profile():
@@ -162,6 +168,7 @@ def profile():
 
     return render_template("Profile.html", user=user)
 
+#==== Upload Profile Picture =====
 
 @app.route("/update_profile", methods=["POST"])
 def update_profile():
@@ -188,6 +195,7 @@ def update_profile():
     flash("Profile updated successfully!", "success")
     return redirect(url_for("profile"))
 
+#===== Upload Profile Picture (Profile.html) =====
 
 @app.route("/upload_image", methods=["POST"])
 def upload_image():
@@ -219,6 +227,7 @@ def upload_image():
     flash("Profile picture updated successfully!", "success")
     return redirect(url_for("profile"))
 
+# ===== logout =====
 
 @app.route("/logout")
 def logout():
@@ -226,6 +235,7 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for("login_page"))
 
+# ===== Tasks / Notes Screen (Notes.html + AddTask.html) =====
 
 @app.route("/tasks/create", methods=["POST"])
 def create_task():
@@ -275,6 +285,7 @@ def create_task():
     flash("Task created!", "success")
     return redirect(url_for("notes"))
 
+#===== Tasks List Screen (Notes.html) =====
 
 @app.route("/notes")
 def notes():
@@ -302,6 +313,7 @@ def notes():
         subject_selected=subject_filter,
     )
 
+#===== Delete Task =====
 
 @app.route("/tasks/delete", methods=["POST"])
 def delete_task():
@@ -335,6 +347,7 @@ def delete_task():
     flash("Task deleted.", "success")
     return redirect(url_for("notes"))
 
+#===== Tasks List API =====
 
 @app.route("/tasks/list")
 def tasks_list():
@@ -365,6 +378,7 @@ def tasks_list():
 
     return jsonify(out)
 
+#====== New Task Screen (AddTask.html) =====
 
 @app.route("/tasks/new")
 def new_task():
@@ -373,6 +387,7 @@ def new_task():
         return redirect(url_for("login_page"))
     return render_template("AddTask.html")
 
+# ===== Exams Screen (Exam.html + AddExam.html) =====
 
 @app.route("/exams")
 def exams():
@@ -408,7 +423,7 @@ def new_exam():
         return redirect(url_for("login_page"))
     return render_template("AddExam.html")
 
-
+#===== Create Exam (AddExam.html) =====
 @app.route("/exams/create", methods=["POST"])
 def create_exam():
     if "user" not in session:
@@ -472,7 +487,7 @@ def create_exam():
     flash("Exam created!", "success")
     return redirect(url_for("exams"))
 
-
+#===== Delete Exam =====
 @app.route("/exams/delete", methods=["POST"])
 def delete_exam():
     if "user" not in session:
@@ -505,6 +520,7 @@ def delete_exam():
     flash("Exam deleted.", "success")
     return redirect(url_for("exams"))
 
+# ===== Dashboard Screen (Dashboard.html) =====
 
 @app.route("/dashboard")
 def dashboard():
@@ -531,7 +547,7 @@ def dashboard():
         exams=exams_rows,
         all_subjects=sorted(subjects),
     )
-
+# ===== Reminder Screen (Reminder.html) =====
 
 @app.route("/reminders", methods=["GET"])
 def reminders():
@@ -547,7 +563,7 @@ def reminders():
 
     return render_template("Reminder.html", reminders=reminders_today)
 
-
+# ===== Delete/Dismiss Reminder =====
 @app.route("/reminders/delete", methods=["POST"])
 def reminders_delete():
     if "user" not in session:
