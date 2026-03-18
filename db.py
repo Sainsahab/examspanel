@@ -9,6 +9,7 @@ load_dotenv()
 #===== Database Connection =====
 
 def get_connection():
+    # Build a fresh MySQL connection from environment configuration.
     return mysql.connector.connect(
         host=os.environ.get("DB_HOST"),
         user=os.environ.get("DB_USER"),
@@ -20,6 +21,7 @@ def get_connection():
 
 def get_user_by_email(email):
     con = get_connection()
+    # dictionary=True returns rows as dicts (column name -> value).
     cur = con.cursor(dictionary=True)
     try:
         cur.execute("SELECT * FROM loginregister WHERE email = %s", (email,))
@@ -110,10 +112,12 @@ def get_notes(user_id, search="", subject_filter=""):
     con = get_connection()
     cur = con.cursor(dictionary=True)
     try:
+        # Start with the base condition, then append optional filters.
         sql = "SELECT * FROM notes WHERE id=%s"
         params = [user_id]
 
         if search:
+            # Use LIKE for free-text matching on title/description.
             sql += " AND (title LIKE %s OR description LIKE %s)"
             like = f"%{search}%"
             params.extend([like, like])
@@ -157,6 +161,7 @@ def get_notes_api_rows(user_id, search="", subject=""):
     con = get_connection()
     cur = con.cursor(dictionary=True)
     try:
+        # Keep API payload lighter by selecting only required note fields.
         sql = "SELECT note_id, title, subject, description, due_text FROM notes WHERE id = %s"
         params = [user_id]
 
@@ -199,6 +204,7 @@ def get_exams(user_id, search="", subject_filter=""):
     con = get_connection()
     cur = con.cursor(dictionary=True)
     try:
+        # Same filter pattern as notes, but scoped to exams.
         sql = """
             SELECT exam_id, title, subject, description, due_text, reminder, priority
             FROM exams
@@ -250,6 +256,7 @@ def get_dashboard_data(user_id, search="", subject=""):
     con = get_connection()
     cur = con.cursor(dictionary=True)
     try:
+        # Run two parallel-style queries (notes + exams) with matching filters.
         notes_sql = "SELECT * FROM notes WHERE id = %s"
         exams_sql = "SELECT * FROM exams WHERE id = %s"
         params_notes = [user_id]
@@ -277,6 +284,7 @@ def get_dashboard_data(user_id, search="", subject=""):
         cur.execute(exams_sql, tuple(params_exams))
         exams_rows = cur.fetchall() or []
 
+        # Return a unique set of non-empty subjects across both sources.
         subjects = {row["subject"] for row in notes_rows + exams_rows if row.get("subject")}
         return notes_rows, exams_rows, subjects
     finally:
@@ -288,12 +296,14 @@ def parse_due_date_from_text(text):
     if not text:
         return None
 
+    # Accept due date strings with optional leading "Due" label.
     clean_text = text.strip()
     for prefix in ("Due:", "Due -", "Due", "due:", "due -"):
         if clean_text.startswith(prefix):
             clean_text = clean_text[len(prefix):].strip()
             break
 
+    # Try common UI-friendly formats before giving up.
     for fmt in ("%b %d, %Y", "%B %d, %Y", "%Y-%m-%d"):
         try:
             return datetime.strptime(clean_text, fmt).date()
@@ -308,12 +318,14 @@ def generate_todays_reminders_for_user(user_id):
     con = get_connection()
     cur = con.cursor(dictionary=True)
     try:
+        # Housekeeping: remove stale reminders older than today.
         cur.execute(
             "DELETE FROM reminders WHERE user_id = %s AND reminder_date < %s",
             (user_id, today),
         )
         con.commit()
 
+        # Pull candidate note/exam records that may need reminder entries.
         cur.execute(
             """
             SELECT note_id AS id, title, subject, description, due_text, 'notes' AS src
@@ -339,6 +351,7 @@ def generate_todays_reminders_for_user(user_id):
             if not due_dt:
                 continue
 
+            # Create reminders only for upcoming items due within 1..7 days.
             days_left = (due_dt - today).days
             if 1 <= days_left <= 7:
                 try:
@@ -351,8 +364,10 @@ def generate_todays_reminders_for_user(user_id):
                     )
                     con.commit()
                 except mysql.connector.Error:
+                    # Ignore duplicate/constraint errors and continue processing.
                     con.rollback()
 
+        # Load today's active (not dismissed) reminders with related item details.
         cur.execute(
             """
             SELECT r.reminder_id, r.source_table, r.source_id, r.reminder_date, r.dismissed,
@@ -375,6 +390,7 @@ def generate_todays_reminders_for_user(user_id):
         reminders = []
         for row in rows:
             due_dt = parse_due_date_from_text(row.get("due_text") or "")
+            # Normalize output shape and compute derived "days_left" value.
             reminders.append(
                 {
                     "reminder_id": row.get("reminder_id"),
@@ -398,6 +414,7 @@ def dismiss_reminder(reminder_id, user_id, reminder_date):
     con = get_connection()
     cur = con.cursor()
     try:
+        # Validate ownership/date before allowing a dismiss action.
         cur.execute(
             """
             SELECT reminder_id
